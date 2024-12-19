@@ -1,0 +1,9 @@
+Here are your current saved items:
+
+    __________________________________________________
+    1. Code: F-2983 |Name: Cachu |Status: Good
+    Type: Salsa |Expiration: 12/15/2024 |Price: 2
+    Quantity: 4 |Location: freezer |Date Added: 12/14/2024
+    __________________________________________________
+
+End of the file.
