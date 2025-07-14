@@ -188,7 +188,7 @@ Please select from the menu (1-5): ");
 
         } // End of if #2
 
-        // If #3: if the user wanrs to view all the items
+        // If #3: if the user wants to view all the items
         else if (input == "3")
         {   
             // This is the loading message
@@ -255,10 +255,10 @@ Goodbye, and have a nice day!
         string emailBody = _emailService.GenerateEmailBody(_statusChecker.GetAllExpiringItems());
 
         // This sends an email with the expired items
-        _emailService.SendEmail("Expiring Items Notification", emailBody);
+        //_emailService.SendEmail("Expiring Items Notification", emailBody);
 
-        // This terminates the program
-        //Environment.Exit(0);
+        // This clears the console
+        Console.Clear();
 
         } // End of if #5
 
