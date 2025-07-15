@@ -5,21 +5,14 @@ using System.Collections.Generic;
 public class AccountManager
 {
     // File path for storing account data
-    private const string AccountFile = "accounts.txt";
+    private const string _accountFile = "accounts.txt";
 
     // Properties to store the current logged-in user
-    public string LoggedInUsername { get; private set; }
-    public string LoggedInEmail { get; private set; }
+    public string _loggedInUserName { get; private set; }
+    public string _loggedInEmail { get; private set; }
 
     // Instance of UserInterface for displaying animations
-    UserInterface account_ui = new UserInterface();
-
-    // Check if any account exists
-    public bool AccountExists()
-    {
-        // Check if the account file exists and is not empty
-        return File.Exists(AccountFile) && new FileInfo(AccountFile).Length > 0;
-    }
+    UserInterface _accountUI = new UserInterface();
 
     // Create a new account and append it to the file
     public void CreateAccount()
@@ -32,7 +25,7 @@ public class AccountManager
         Console.WriteLine("(Enter 0 at any time to return to the main menu)");
 
         // Load all existing accounts into a list for duplicate checking
-        string[] lines = File.Exists(AccountFile) ? File.ReadAllLines(AccountFile) : new string[0];
+        string[] lines = File.Exists(_accountFile) ? File.ReadAllLines(_accountFile) : new string[0];
         HashSet<string> existingEmails = new HashSet<string>();
         HashSet<string> existingUsernames = new HashSet<string>();
         HashSet<string> existingPasswords = new HashSet<string>();
@@ -212,13 +205,13 @@ Password: {tempPassword}
 ---";
 
         // Append the account data to the file
-        File.AppendAllText(AccountFile, accountData + Environment.NewLine);
+        File.AppendAllText(_accountFile, accountData + Environment.NewLine);
 
         // Account creating prompt
         Console.WriteLine("\nCreating a new account...");
 
         // Show loading animation
-        account_ui.LoadingAnimation();
+        _accountUI.LoadingAnimation();
 
         // Clear the console
         Console.Clear();
@@ -227,7 +220,7 @@ Password: {tempPassword}
         Console.WriteLine("\nAccount created successfully! Please log in to continue.");
 
         // Show loading animation
-        account_ui.LoadingAnimation();
+        _accountUI.LoadingAnimation();
 
         // Clear the console
         Console.Clear();
@@ -262,6 +255,9 @@ Please select from the menu (1-3): ");
                 // Call the Login method and check if it returns a valid result
                 var loginResult = Login();
 
+                // Clear the console
+                Console.Clear();
+
                 // If login is successful, return the user data
                 if (loginResult != null) return loginResult.Value; // Login successful, return user data
 
@@ -285,7 +281,7 @@ Please select from the menu (1-3): ");
                 Console.WriteLine("\nQuiting program...");
 
                 // Displays the quick animation
-                account_ui.LoadingAnimation();
+                _accountUI.LoadingAnimation();
 
                 //clear the console
                 Console.Clear();
@@ -318,7 +314,7 @@ Please select from the menu (1-3): ");
         // Display the login prompt
         Console.WriteLine("Log In to Your Account");
         Console.WriteLine("(Enter 0 at any time to return to the main menu)");
-
+        
         // Ask for email and password
         Console.Write("\nEmail: ");
         // Read input
@@ -333,6 +329,24 @@ Please select from the menu (1-3): ");
             return null;
 
         } // End of if
+
+        while (string.IsNullOrWhiteSpace(inputEmail))
+        {
+            // If email is blank, prompt to enter a valid one
+            Console.Write("Email cannot be blank. Please enter your email:");
+            inputEmail = Console.ReadLine();
+
+            // If user enters '0', return to main menu
+            if (inputEmail == "0")
+            {
+                // Clear the console
+                Console.Clear();
+                // Return to main menu
+                return null;
+
+            } // End of if
+
+        } // End of while loop
 
         // Ask for password
         Console.Write("Password: ");
@@ -349,8 +363,26 @@ Please select from the menu (1-3): ");
 
         } // End of if
 
+        while (string.IsNullOrWhiteSpace(inputPassword))
+        {
+            // If password is blank, prompt to enter a valid one
+            Console.Write("Password cannot be blank. Please enter your password:");
+            inputPassword = Console.ReadLine();
+
+            // If user enters '0', return to main menu
+            if (inputPassword == "0")
+            {
+                // Clear the console
+                Console.Clear();
+                // Return to main menu
+                return null;
+
+            } // End of if
+
+        } // End of while loop
+
         // Read all lines from the account file
-        string[] lines = File.ReadAllLines(AccountFile);
+        string[] lines = File.ReadAllLines(_accountFile);
 
         // Variables to store username, email, and password
         string username = "", email = "", password = "";
@@ -370,7 +402,11 @@ Please select from the menu (1-3): ");
             {
                 // Check if the input email and password match the stored ones
                 if (inputEmail == email && inputPassword == password)
-                {
+                {   
+                    // Set the logged-in user properties
+                    _loggedInUserName = username;
+                    _loggedInEmail = email;
+
                     // Set the logged-in user properties
                     return (username, email); // Successful login
 

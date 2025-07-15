@@ -1,0 +1,15 @@
+Here are your current saved items:
+
+    __________________________________________________
+    1. Code: F-4088 |Name: pollo |Status: Expired
+    Type: meat |Expiration: 12/12/2024 |Price: 12
+    Quantity: 12 |Location: freezer |Date Added: 07/14/2025
+    __________________________________________________
+
+    __________________________________________________
+    2. Code: D-4479 |Name: beans |Status: Good
+    Type: vegetable |Expiration: 12/12/2025 |Price: 4
+    Quantity: 111 |Location: dry |Date Added: 07/14/2025
+    __________________________________________________
+
+End of the file.

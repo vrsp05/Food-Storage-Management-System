@@ -28,12 +28,14 @@ class Program
         Console.Clear();
 
         // This runs the login flow and returns (username, email)
-        var userInfo = accountManager.ShowLoginMenu();
-        string username = userInfo.Username;
-        string email = userInfo.Email;
+        accountManager.ShowLoginMenu();
+        string LoggedInUsername = accountManager._loggedInUserName;
+
+        // This sets the logged in user in the UserInterface class
+        ui.SetLoggedInUser(accountManager);
 
         // Later we'll load data: $"{username}_foodDATA.txt"
-        Console.WriteLine($"\nLogin successful. Welcome, {username}!");
+        Console.WriteLine($"\nLogin successful. Welcome, {LoggedInUsername}!");
 
         // Quick loading animation
         ui.LoadingAnimation();
@@ -49,7 +51,7 @@ class Program
         ui.LoadingAnimation();
 
         // String for the food data file
-        string foodFile = $"{username}_foodDATA.txt";
+        string foodFile = $"{LoggedInUsername}_foodDATA.txt";
 
         // Check if the food data file exists
         if (File.Exists(foodFile))
@@ -64,7 +66,7 @@ class Program
 
 
             // This will load the information from the file
-            ui.LoadingSequence("food.txt");
+            ui.LoadingSequence(foodFile);
 
             // Quick loading animation
             ui.LoadingAnimation();

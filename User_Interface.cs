@@ -18,6 +18,9 @@ class UserInterface
     private EmailService _emailService = new EmailService("vrsppalilo@gmail.com", "babz jdgk yihw ejxx");
     // this creates an instance for the InputValidator class
     private InputValidator _validator = new InputValidator();
+    // This creates the variables that will be used to store the logged in user information
+    public string _loggedInUsername;
+
 
     // Constructors
     public UserInterface()
@@ -26,10 +29,10 @@ class UserInterface
     } // End of constructor
 
     // Behaviors
-    
+
     // This method displays the menu to the user
     public void DisplayMenu()
-    {   
+    {
         // This prints the menu
         Console.Write(@"
 Welcome to the Food Storage Management System (FSMS)
@@ -53,15 +56,15 @@ Please select from the menu (1-5): ");
 
         // This returns the input
         return menuInput;
-        
+
     } // End of method MenuInput
 
     // This method will handle the decisions of the user
     public void MenuActions(string input)
-    {   
+    {
         // If #1: If the user selects to add an item
         if (input == "1")
-        {   
+        {
             // This creates the variables that will be used
             string name;
             string type;
@@ -79,7 +82,7 @@ Please select from the menu (1-5): ");
 
             // While loop that runs until all questions have been answered properly
             while (isValid == false)
-            {   
+            {
                 // Try to help catching other errors
                 try
                 {
@@ -92,7 +95,7 @@ Please select from the menu (1-5): ");
                     // This asks the type of the item, reads and assigns the input into a variable
                     Console.Write("What is the type of the item (meat, vegetable, bread, rice, etc.)? ");
                     type = _validator.ValidateNonBlankInput(MenuInput()); // Input validation happens here
-                    
+
                     // This asks the expiration date of the item, reads and assigns the input into a variable
                     Console.Write("What is the expiration date of the item (MM/dd/yyyy)? ");
                     expirationDate = _validator.ValidateDate(MenuInput()); // Input validation happens here
@@ -190,7 +193,7 @@ Please select from the menu (1-5): ");
 
         // If #3: if the user wants to view all the items
         else if (input == "3")
-        {   
+        {
             // This is the loading message
             Console.WriteLine();
             Console.WriteLine("Displaying items...");
@@ -212,11 +215,9 @@ Please select from the menu (1-5): ");
 
         // If #4: if the user wants to save the list
         else if (input == "4")
-        {   
-            // This asks the user the name of the file and reads the input
-            Console.WriteLine();
-            Console.Write("What is the name of the file? ");
-            string fileName = _validator.ValidateNonBlankInput(MenuInput());
+        {
+            // This builds the file name with the logged in username
+            string fileName = $"{_loggedInUsername}_foodDATA.txt";
 
             // This is a adding message
             Console.WriteLine("Saving... ");
@@ -226,7 +227,7 @@ Please select from the menu (1-5): ");
 
             // This calls the method that saves the file
             _fsms.SaveFoodItems(fileName);
-           
+
             // This is a adding message
             Console.WriteLine("Closing... ");
 
@@ -240,25 +241,25 @@ Please select from the menu (1-5): ");
 
         // If #5: if the user wants to quit the program
         else if (input == "5")
-        {   
+        {
             // This gives a nice goodbye message
             Console.WriteLine(@"
 Goodbye, and have a nice day!
 ");
-        // This tells the user that program is closing
-        Console.WriteLine("Quiting program...");
+            // This tells the user that program is closing
+            Console.WriteLine("Quiting program...");
 
-        // Displays the quick animation
-        LoadingAnimation();
+            // Displays the quick animation
+            LoadingAnimation();
 
-        // This builds the body of the email
-        string emailBody = _emailService.GenerateEmailBody(_statusChecker.GetAllExpiringItems());
+            // This builds the body of the email
+            string emailBody = _emailService.GenerateEmailBody(_statusChecker.GetAllExpiringItems());
 
-        // This sends an email with the expired items
-        //_emailService.SendEmail("Expiring Items Notification", emailBody);
+            // This sends an email with the expired items
+            //_emailService.SendEmail("Expiring Items Notification", emailBody);
 
-        // This clears the console
-        Console.Clear();
+            // This clears the console
+            Console.Clear();
 
         } // End of if #5
 
@@ -315,10 +316,10 @@ Goodbye, and have a nice day!
 
     // This method will help in loading the information into the file
     public void LoadingSequence(string fileName)
-    {      
+    {
         // If# 1: Checks if the file was already loaded
         if (_isLoaded == false)
-        {   
+        {
             // This calls the method that loads all date
             _fsms.LoadFoodItems(fileName);
 
@@ -329,7 +330,7 @@ Goodbye, and have a nice day!
 
         // If #2: Checks and tells the the user that the data was loadedn
         else if (_isLoaded == true)
-        {   
+        {
             // Debuggin message that helps marking that the file was uploaded
             Console.WriteLine("File is already loaded");
 
@@ -339,10 +340,18 @@ Goodbye, and have a nice day!
 
     // This method helps in checking the values once
     public void CheckingSequence()
-    {   
+    {
         // This calls the checking method
         _statusChecker.CheckExpirationStatus(_fsms.GetAllFoodItems());
 
     } // End of method CheckingSequence
 
+    // This method sets the logged in user
+    public void SetLoggedInUser(AccountManager accountManager)
+    {
+        // This sets the logged in user
+        _loggedInUsername = accountManager._loggedInUserName;
+
+    } // End of SetLoggedInUser method
+    
 } // End of class UserInterface
