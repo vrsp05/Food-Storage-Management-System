@@ -12,4 +12,10 @@ Here are your current saved items:
     Quantity: 111 |Location: dry |Date Added: 07/14/2025
     __________________________________________________
 
+    __________________________________________________
+    3. Code: D-6192 |Name: mac n cheese |Status: Good
+    Type: pasta |Expiration: 07/17/2025 |Price: 2
+    Quantity: 6 |Location: dry |Date Added: 07/16/2025
+    __________________________________________________
+
 End of the file.

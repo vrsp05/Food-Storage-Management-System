@@ -14,12 +14,11 @@ class UserInterface
     private FoodItems _FoodItems = new DryItems();
     // This creates an instance for the CheckExpiration class
     private ExpirationChecker _statusChecker = new ExpirationChecker();
-    // This creates an instance for the EmailService class
-    private EmailService _emailService = new EmailService("vrsppalilo@gmail.com", "babz jdgk yihw ejxx");
     // this creates an instance for the InputValidator class
     private InputValidator _validator = new InputValidator();
     // This creates the variables that will be used to store the logged in user information
     public string _loggedInUsername;
+    public string _loggedInEmail;
 
 
     // Constructors
@@ -60,7 +59,7 @@ Please select from the menu (1-5): ");
     } // End of method MenuInput
 
     // This method will handle the decisions of the user
-    public void MenuActions(string input)
+    public void MenuActions(string input, EmailService _emailService)
     {
         // If #1: If the user selects to add an item
         if (input == "1")
@@ -247,19 +246,34 @@ Please select from the menu (1-5): ");
 Goodbye, and have a nice day!
 ");
             // This tells the user that program is closing
-            Console.WriteLine("Quiting program...");
+            Console.WriteLine("Sending Email...");
 
             // Displays the quick animation
             LoadingAnimation();
 
+            //This clears the console
+            Console.Clear();
+
             // This builds the body of the email
-            string emailBody = _emailService.GenerateEmailBody(_statusChecker.GetAllExpiringItems());
+            string emailBody = _emailService.GenerateEmailBody(_statusChecker.GetAllExpiringItems(), _loggedInUsername);
 
             // This sends an email with the expired items
-            //_emailService.SendEmail("Expiring Items Notification", emailBody);
+            _emailService.SendEmail("Expiring Items Notification", emailBody, _loggedInEmail);
+
+            // Displays the quick animation
+            LoadingAnimation();
 
             // This clears the console
-            Console.Clear();
+            //Console.Clear();
+
+            // This tells the user that program is closing
+            Console.WriteLine("Quitting program...");
+
+            // Displays the quick animation
+            LoadingAnimation();
+
+            // This clears the console
+            //Console.Clear();
 
         } // End of if #5
 
@@ -347,10 +361,12 @@ Goodbye, and have a nice day!
     } // End of method CheckingSequence
 
     // This method sets the logged in user
-    public void SetLoggedInUser(AccountManager accountManager)
+    public void SetLoggedInAccount(AccountManager accountManager)
     {
         // This sets the logged in user
         _loggedInUsername = accountManager._loggedInUserName;
+        // This sets the logged in user email
+        _loggedInEmail = accountManager._loggedInEmail;
 
     } // End of SetLoggedInUser method
     

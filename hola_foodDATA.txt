@@ -1,0 +1,9 @@
+Here are your current saved items:
+
+    __________________________________________________
+    1. Code: F-9156 |Name: pollo |Status: Good
+    Type: meat |Expiration: 12/12/2025 |Price: 12
+    Quantity: 12 |Location: freezer |Date Added: 07/15/2025
+    __________________________________________________
+
+End of the file.

@@ -15,16 +15,10 @@ public class EmailService
     private string _smtpServer;
     // This holds the port of the email server
     private int _smtpPort;
-    // This variable will hold the recipient's email
-    private List<string> _recipientEmails = new List<string>
-    {
-        "vrsppalilo@gmail.com",
-        "noragj13@gmail.com"
-    };
 
     // Constructors
     public EmailService(string senderEmail, string senderPassword, string smtpServer = "smtp.gmail.com", int smtpPort = 587)
-    {   
+    {
         // This  assigns the values needed to our email service class
         _senderEmail = senderEmail;
         _senderPassword = senderPassword;
@@ -35,14 +29,14 @@ public class EmailService
 
     // Behaviors
     // This method helps in sending the email
-    public void SendEmail(string subject, string body)
-    {   
+    public void SendEmail(string subject, string body, string recipientEmail)
+    {
         // Trying to create the client, message, and send it
         try
         {
             // This creates a new smtp instance to help access the smtp server and account
             SmtpClient emailAccount = new SmtpClient(_smtpServer)
-            {   
+            {
                 // These assing the smpt values
                 Port = _smtpPort, // smtp server port
                 Credentials = new NetworkCredential(_senderEmail, _senderPassword), // Establishes the credentials of the sender
@@ -52,7 +46,7 @@ public class EmailService
 
             // This creates message instace to help building the email
             MailMessage emailMessage = new MailMessage
-            {   
+            {
                 // These assing the message values
                 From = new MailAddress(_senderEmail), // sets the sender address
                 Subject = subject, // this sets the email subject
@@ -60,13 +54,8 @@ public class EmailService
 
             }; // End of message instace
 
-            // Loop that assists in adding the email recipients
-            foreach (string email in _recipientEmails)
-            {   
-                // This adds the email as a recipient
-                emailMessage.To.Add(email);
-
-            } // End of foreach
+            // This adds the email as a recipient
+            emailMessage.To.Add(recipientEmail);
 
             // This sends the email
             emailAccount.Send(emailMessage);
@@ -78,7 +67,7 @@ public class EmailService
 
         // Catch in case something goes wrong
         catch (Exception ex)
-        {   
+        {
             // This tells the user that sending the email failed
             Console.WriteLine($"Failed to send email: {ex.Message}");
 
@@ -87,13 +76,13 @@ public class EmailService
     } // End of method SendEmail
 
     // This method helps in generating the body for the email just including the expired items
-    public string GenerateEmailBody(List<string> expiringItems)
-    {   
+    public string GenerateEmailBody(List<string> expiringItems, string recipientUsername)
+    {
         // If #1: checks if there are any existing expired items
         if (expiringItems == null || expiringItems.Count == 0)
-        {   
+        {
             // This message is sent if there are not expiring items
-            string noExpiringItemsEmailBody = @"Dear user,
+            string noExpiringItemsEmailBody = @$"Dear {recipientUsername},
 
 There are no items nearing expiration.
 
@@ -107,15 +96,15 @@ The Food Storage Management System App (FSMS)";
         } // End of if# 1
 
         // This is the first line of the email body
-        string expiringItemsEmailBody = @"Dear user,
-        
+        string expiringItemsEmailBody = @$"Dear {recipientUsername},
+
 The following items are nearing expiration:";
 
         // Starts the list with number 1
         int listNumber = 1;
 
         foreach (string item in expiringItems)
-        {   
+        {
             // This breaks down the parts of each food item
             string[] foodParts = item.Split(",");
 
@@ -140,7 +129,7 @@ __________________________________________________
 ";
 
             // This adds one to the listNumber
-            listNumber++;;
+            listNumber++; ;
 
         } // End of foreach
 
@@ -157,12 +146,27 @@ The Food Storage Management System App (FSMS)";
 
     } // End of method GenerateEmailBody
 
-    // // This method returns the list of recipients
-    // public List<string> GetRecipientsList()
-    // {   
-    //     // This returns the list
-    //     return _recipientEmails;
+    public static EmailService LoadFromFile(string filePath)
+    {
+        try
+        {
+            // Read all lines from the file
+            string[] lines = File.ReadAllLines(filePath);
 
-    // } // End of method GetRecipientsList
+            // Assumes first line is email, second line is password
+            string senderEmail = lines[0].Trim();
+            string senderPassword = lines[1].Trim();
+
+            // Return an EmailService object using your current constructor
+            return new EmailService(senderEmail, senderPassword);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load email credentials: {ex.Message}");
+            return null;
+        }
+    }
+
+
 
 } // End of the EmailService class

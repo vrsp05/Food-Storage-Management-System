@@ -1,0 +1,9 @@
+Here are your current saved items:
+
+    __________________________________________________
+    1. Code: F-8372 |Name: ice crea |Status: Expired
+    Type: dairy |Expiration: 07/10/2025 |Price: 4.37
+    Quantity: 2 |Location: freezer |Date Added: 07/17/2025
+    __________________________________________________
+
+End of the file.

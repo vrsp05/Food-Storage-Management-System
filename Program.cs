@@ -13,16 +13,35 @@ class Program
         UserInterface ui = new UserInterface();
         InputValidator validator = new InputValidator();
         AccountManager accountManager = new AccountManager();
+        EmailService emailService = EmailService.LoadFromFile("email_config.txt");
 
         // This clears the console
         Console.Clear();
 
         // Starting system message
         Console.WriteLine();
-        Console.WriteLine("Checking for existing account... ");
-
+        Console.WriteLine("Checking for email service... ");
+        
         // Quick loading animation
         ui.LoadingAnimation();
+
+        // This checks if the email service was loaded successfully
+        // If the email service is null, it means it could not be loaded
+        if (emailService == null)
+        {
+            // This tells the user that the email service could not be loaded
+            Console.WriteLine(@"
+Error: Could not load email service. Please contact support.
+
+The program will now exit.");
+
+            // Quick loading animation
+            ui.LoadingAnimation();
+
+            // This terminates the program
+            return;
+
+        } // End of if
 
         // This clears the console
         Console.Clear();
@@ -32,7 +51,7 @@ class Program
         string LoggedInUsername = accountManager._loggedInUserName;
 
         // This sets the logged in user in the UserInterface class
-        ui.SetLoggedInUser(accountManager);
+        ui.SetLoggedInAccount(accountManager);
 
         // Later we'll load data: $"{username}_foodDATA.txt"
         Console.WriteLine($"\nLogin successful. Welcome, {LoggedInUsername}!");
@@ -61,9 +80,6 @@ class Program
 
             // Confirm the file found
             Console.WriteLine($"Found food data file: {foodFile}");
-
-            // Load the file later here
-
 
             // This will load the information from the file
             ui.LoadingSequence(foodFile);
@@ -107,7 +123,7 @@ class Program
             menuInput = validator.ValidateMenuInput(menuInput);
 
             // This calls the MenuAction method to perform the menu actions
-            ui.MenuActions(menuInput);
+            ui.MenuActions(menuInput, emailService);
 
         } while (menuInput == null || menuInput != "5"); // End of do while loop
         
