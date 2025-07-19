@@ -264,7 +264,7 @@ Goodbye, and have a nice day!
             LoadingAnimation();
 
             // This clears the console
-            //Console.Clear();
+            Console.Clear();
 
             // This tells the user that program is closing
             Console.WriteLine("Quitting program...");
@@ -273,7 +273,7 @@ Goodbye, and have a nice day!
             LoadingAnimation();
 
             // This clears the console
-            //Console.Clear();
+            Console.Clear();
 
         } // End of if #5
 

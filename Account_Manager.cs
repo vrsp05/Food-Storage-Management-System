@@ -13,6 +13,8 @@ public class AccountManager
 
     // Instance of UserInterface for displaying animations
     UserInterface _accountUI = new UserInterface();
+    // Instance of InputValidator for validating inputs
+    InputValidator _inputValidator = new InputValidator();
 
     // Create a new account and append it to the file
     public void CreateAccount()
@@ -22,7 +24,7 @@ public class AccountManager
 
         // Display account creation prompt
         Console.WriteLine("Create a New Account");
-        Console.WriteLine("(Enter 0 at any time to return to the main menu)");
+        Console.WriteLine("(Enter 0 at any time to return to the main menu)\n");
 
         // Load all existing accounts into a list for duplicate checking
         string[] lines = File.Exists(_accountFile) ? File.ReadAllLines(_accountFile) : new string[0];
@@ -66,7 +68,7 @@ public class AccountManager
         while (true)
         {
             // Ask for username
-            Console.Write("\nEnter a username: ");
+            Console.Write("Enter a username: ");
             // Read input
             tempUsername = Console.ReadLine();
 
@@ -125,6 +127,14 @@ public class AccountManager
 
             } // End of if
 
+            // If the email is invalid, prompt to enter a valid one
+            if (!_inputValidator.IsValidEmail(tempEmail))
+            {
+                // Continue
+                continue;
+
+            } // End of if
+
             // Check if the email already exists
             if (existingEmails.Contains(tempEmail))
             {
@@ -155,10 +165,8 @@ public class AccountManager
         // while loop that asks for password
         while (true)
         {
-            // Ask for password
-            Console.Write("Create a password: ");
-            // Read input
-            tempPassword = Console.ReadLine();
+            // Test input
+            tempPassword = _inputValidator.GetValidPassword(tempUsername, tempEmail);
 
             // If user enters '0', return to main menu
             if (tempPassword == "0")
@@ -177,14 +185,6 @@ public class AccountManager
                 Console.WriteLine("That password is already used. Try a different one.");
 
             } // End of if
-
-            // If the password is blank, prompt to enter a valid one
-            else if (string.IsNullOrWhiteSpace(tempPassword))
-            {
-                // If it is blank, prompt to enter a valid one
-                Console.WriteLine("Password cannot be blank.");
-
-            } // End of else if
 
             // If password is valid, break the loop
             else
